@@ -96,20 +96,20 @@ function ProfilePage() {
                     <Pencil onClick={clickBio} className={write? "hidden":""}/>
                     
                 </div>
-                <div className="flex items-center">
-                    <input type="text"  onChange={(el)=>setBio(el.target.value)} className={write?"h-10 w-full border-2 border-[#2f1f20] bg-[#3c3c3c]  ":"hidden"}/>
-                    <button type="submit" onMouseEnter={()=>setHoverBtn(true)} onMouseLeave={()=>setHoverBtn(false)} className={!write?"hidden":"btn bg-[#170c16]"} onClick={handleBio}>{hoverBtn?"Done":bio.length+"/120"}</button>
+                <div className="flex items-center gap-2">
+                    <input type="text"  onChange={(el)=>setBio(el.target.value)} className={write?"h-10 w-full border-2 border-base-100    ":"hidden"}/>
+                    <button type="submit" onMouseEnter={()=>setHoverBtn(true)} onMouseLeave={()=>setHoverBtn(false)} className={!write?"hidden":"btn bg-green-400"} onClick={handleBio}>{hoverBtn?"Done":bio.length+"/120"}</button>
                 </div>
                     
                 <div>
                     
                     <span className="flex  gap-2 text-[#71717B]"><User/>Full Name</span>
-                    <input type="text"  value={authUser?.fullName} className="w-full h-10 p-4 border-2 border-base-100 rounded-md bg-transparent text-white" />  
+                    <input type="text"  value={authUser?.fullName} className="w-full h-10 p-4 border-2 border-base-100 rounded-md bg-transparent" />  
                 </div>
                 <div>
                     
                     <span className="flex  gap-2 text-[#71717B]"><Mail/>Full Name</span>
-                    <input type="text"  value={authUser?.email} className="w-full h-10 p-4 border-2 border-base-100 rounded-md bg-transparent text-white" />  
+                    <input type="text"  value={authUser?.email} className="w-full h-10 p-4 border-2 border-base-100 rounded-md bg-transparent " />  
                 </div>
             </div>
         </div>

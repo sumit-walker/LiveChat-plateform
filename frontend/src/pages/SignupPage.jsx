@@ -84,8 +84,8 @@ function SignupPage() {
                         />
                         {(formData.password.length > 0) && (
                             showPwd
-                            ? <Eye className="relative left-85 bottom-8 text-[#71717B] cursor-pointer" onClick={()=>setShowPwd(false)}/>
-                            : <EyeOff className="relative left-85 bottom-8 text-[#71717B] cursor-pointer" onClick={()=>setShowPwd(true)}/>
+                            ? <Eye className="relative left-72 bottom-8 text-[#71717B] cursor-pointer" onClick={()=>setShowPwd(false)}/>
+                            : <EyeOff className="relative left-72 bottom-8 text-[#71717B] cursor-pointer" onClick={()=>setShowPwd(true)}/>
                         )}
                     </div>
                     <button type="submit" className="btn bg-[#FF9900] text-black border-[#e17d00] mt-5 w-full rounded-md">
