@@ -12,7 +12,6 @@ function ChatContainer() {
 
     useEffect(()=>{
         getMessages(selectedUser._id);
-
         subscribeTOMessages();
 
         return ()=>unsubscribeTOMessages();
