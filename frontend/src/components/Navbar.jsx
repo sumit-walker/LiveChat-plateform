@@ -43,7 +43,7 @@ export default function Navbar() {
                     className="p-2 focus:outline-none"
                     aria-label="Open menu"
                 >
-                    <Menu className="size-7 text-white" />
+                    <Menu className="size-7 " />
                 </button>
                 {menuOpen && (
                     <div className="absolute right-0 mt-2 w-40 bg-base-100  rounded-md shadow-lg flex flex-col z-20">

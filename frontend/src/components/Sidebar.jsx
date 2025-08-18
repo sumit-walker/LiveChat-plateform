@@ -18,7 +18,8 @@ function Sidebar() {
     
     if(isUserLoading) return <SidebarSkeleton/>
     return ( 
-        <div className={`h-full ${selectedUser? "hidden":"w-full"}  lg:w-100 border-r border-base-100 flex flex-col min-h-0 transition-all duration-200 `}>
+        <div className={`h-full ${selectedUser ? "hidden sm:flex sm:w-full lg:w-100" : "w-full lg:w-100"} 
+                        border-r border-base-100 flex flex-col min-h-0 transition-all duration-200`}>
            <div className="border-b border-base-100 w-full px-5 py-2">
                 <div className="flex items-center gap-2">
                     <Users className="size-6"/>
@@ -40,42 +41,42 @@ function Sidebar() {
                     </label>
                 </div>
             </div>
-        <div className="overflow-y-auto flex-1 w-full rounded-bl-2xl   ">
+        <div className="overflow-y-auto flex-1 w-full rounded-bl-2xl  p-2 ">
             
-            {filteredUsers.map((user) => (
-            <button
-                key={user._id}
-                onClick={() => setSelectedUser(user)}
-                className={`
-                lg:w-full lg:p-2 lg:border-b lg:border-base-100 flex items-center  gap-3  p-3 
-                hover:bg-base-100 transition-colors
-                ${selectedUser?._id === user._id ? "bg-base-100 ring-1 ring-base-300" : ""}
-                `}
-            >
-                <div className="relative left-0 mx-auto lg:mx-0">
-                <img
-                    src={user.profilePic || "/avatar.png"}
-                    alt={user.name}
-                    className="size-12 object-cover rounded-full "
-                />
-                {onlineUsers.includes(user._id) && (
-                    <span
-                    className="absolute bottom-0 right-0 size-3 bg-green-500 
-                    rounded-full ring-2 ring-zinc-900"
+          {filteredUsers.map((user) => (
+                <button
+                    key={user._id}
+                    onClick={() => setSelectedUser(user)}
+                    className={`
+                    w-full lg:p-2 border-b border-base-100 flex items-center gap-3 p-3 
+                    hover:bg-base-100 transition-colors
+                    ${selectedUser?._id === user._id ? "bg-base-300 ring-1 ring-base-300" : ""}
+                    `}
+                >
+                    {/* Avatar */}
+                    <div className="relative flex-shrink-0">
+                    <img
+                        src={user.profilePic || "/avatar.png"}
+                        alt={user.fullName}
+                        className="size-12 object-cover rounded-full"
                     />
-                )}
-                </div>
+                    {onlineUsers.includes(user._id) && (
+                        <span
+                        className="absolute bottom-0 right-0 size-3 bg-green-500 
+                        rounded-full ring-2 ring-zinc-900"
+                        />
+                    )}
+                    </div>
 
-                {/* User info - only visible on larger screens */}
-                <div className=" text-left min-w-0">
-                <div className="font-medium truncate">{user.fullName}</div>
-                <div className="text-sm text-zinc-400">
-                    {onlineUsers.includes(user._id) ? "Online" : "Offline"}
-                </div>
-                </div>
-            </button>
-            ))}
-
+                    {/* User info - hidden on small screens */}
+                    <div className=" text-left min-w-0">
+                        <div className="font-medium truncate">{user.fullName}</div>
+                        <div className="text-sm text-zinc-400">
+                            {onlineUsers.includes(user._id) ? "Online" : "Offline"}
+                        </div>
+                    </div>
+                </button>
+                ))}
             {
                 filteredUsers.length===0 &&(
                     <div className="text-center text-zinc-500 py-4">No online users</div>

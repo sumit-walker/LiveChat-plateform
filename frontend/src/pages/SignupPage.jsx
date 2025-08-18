@@ -11,7 +11,7 @@ function SignupPage() {
     const {signup,isSigningup} = useAuthStore();
     const [showPwd,setShowPwd]=useState(false);
     const passwordRef=useRef(null);
-    console.log(passwordRef)
+
     const [formData,setFormData] = useState({
         firstName:"",
         email:"",
