@@ -108,7 +108,7 @@ function ProfilePage() {
                 </div>
                 <div>
                     
-                    <span className="flex  gap-2 text-[#71717B]"><Mail/>Full Name</span>
+                    <span className="flex  gap-2 text-[#71717B]"><Mail/>Email</span>
                     <input type="text"  value={authUser?.email} className="w-full h-10 p-4 border-2 border-base-100 rounded-md bg-transparent " />  
                 </div>
             </div>
