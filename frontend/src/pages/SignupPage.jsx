@@ -56,7 +56,7 @@ function SignupPage() {
                         <User className='absolute top-2.5 left-3 text-[#71717B]'/>
                         <input
                             type="text"
-                            className='w-full h-10 p-4 pl-10 border-2 rounded-md bg-transparent text-white'
+                            className='w-full h-10 p-4 pl-10 border-2 rounded-md bg-transparent'
                             name='fullName'
                             placeholder='John Doe'
                             onChange={(e)=>setFormData({...formData,fullName:e.target.value})}
@@ -97,7 +97,7 @@ function SignupPage() {
                     </button>
                 </form>
                 <p className='text-[#71717B] text-center mt-2'>
-                    Already have an account? <a href="/login" className='underline text-white'>SignIn</a>
+                    Already have an account? <a href="/login" className='underline '>SignIn</a>
                 </p>
             </div>
                 <AuthImagePattern
