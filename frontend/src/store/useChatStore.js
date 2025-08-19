@@ -51,6 +51,20 @@ _subscribed: false, // internal guard
             toast.error(message)
         }
     },
+
+    updateMessage: async (messageId, text) => {
+        const { messages } = get();
+        try {
+            const res = await axiosInstance.put(`/messages/${messageId}`, { text });
+            const updated = res.data;
+            set({
+                messages: messages.map((m) => (m._id === updated._id ? updated : m)),
+            });
+        } catch (error) {
+            const message = error?.response?.data?.message || error?.message || "Failed to update message";
+            toast.error(message);
+        }
+    },
     incrementUnseen: (senderId) => {
     const { unseenMessages } = get();
     set({
@@ -79,6 +93,7 @@ _subscribed: false, // internal guard
 
     // in case something already attached
     socket.off("newMessage");
+    socket.off("messageDeleted");
 
     socket.on("newMessage", (newMessage) => {
       const { selectedUser, messages, unseenMessages } = get();
@@ -99,14 +114,36 @@ _subscribed: false, // internal guard
         });
       }
     });
+
+    socket.on("messageUpdated", (updated) => {
+      const { messages } = get();
+      set({ messages: messages.map((m) => (m._id === updated._id ? updated : m)) });
+    });
+
+    socket.on("messageDeleted", ({ messageId }) => {
+      const { messages } = get();
+      set({ messages: messages.filter((m) => m._id !== messageId) });
+    });
   },
 
   unsubscribeTOMessages: () => {
     const socket = useAuthStore.getState().socket;
     if (!socket) return;
     socket.off("newMessage");
+    socket.off("messageDeleted");
     set({ _subscribed: false });
   },
+
+    deleteMessage: async (messageId) => {
+        const { messages } = get();
+        try {
+            await axiosInstance.delete(`/messages/${messageId}`);
+            set({ messages: messages.filter((m) => m._id !== messageId) });
+        } catch (error) {
+            const message = error?.response?.data?.message || error?.message || "Failed to delete message";
+            toast.error(message);
+        }
+    },
 
   // ✅ Single source of truth: clear unseen here
   setSelectedUser: (user) => {
