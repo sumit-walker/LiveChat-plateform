@@ -14,7 +14,7 @@ function NoChatSelected() {
                     </div>
 
                 {/* Welcome Text */}
-                    <h2 className="text-xl  lg:text-3xl font-bold">Welcome to Chatty!</h2>
+                    <h2 className="text-xl  lg:text-3xl font-bold">Welcome to TalkDesk!</h2>
                     <p className="text-sm text-base-content/60">
                         Select a conversation from the sidebar to start chatting
                     </p>
