@@ -51,7 +51,7 @@ function ProfilePage() {
         <div className="w-full sm:w-120 sm:h-140 max-w-xl rounded-lg bg-base-300 p-5 flex flex-col justify-between"> 
             <div className=" flex flex-col items-center gap-3">
                 <h1 className="text-2xl  font-bold">Profile</h1>
-                <h2>Your frofile information</h2>
+                <h2>Your profile information</h2>
             </div>
              <div className="flex flex-col items-center gap-4">
                 <div className="relative">
