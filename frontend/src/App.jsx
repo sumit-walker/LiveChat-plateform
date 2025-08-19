@@ -10,6 +10,7 @@ import {Loader} from "lucide-react"
 import {useEffect} from "react"
 import { Toaster } from "react-hot-toast";
 import { useThemeStore } from "./store/useThemeStore.js"
+import SoundTest from "./components/SoundTest.jsx"
 const App=()=> {
 
   const {authUser,checkAuth,isCheckingAuth,onlineUsers}= useAuthStore();
@@ -37,6 +38,9 @@ const App=()=> {
         <Route path="/profile" element={authUser? <ProfilePage/> : <Navigate to="/login"/>} />
       </Routes>
       <Toaster/>
+      
+      {/* Temporary Sound Test Component - Remove in production */}
+      {authUser && <SoundTest />}
     </div>
   )
 }

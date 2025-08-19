@@ -112,6 +112,11 @@ export const useAuthStore = create((set,get)=>({
         socket.on("getOnlineUsers",(userIds)=>{
             set({onlineUsers:userIds});
         })
+        
+        // Request notification permission for better user experience
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
     },
    
     disconnectSocket:()=>{
