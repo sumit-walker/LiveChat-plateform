@@ -1,4 +1,5 @@
 import {useEffect,useRef,useState} from "react";
+import { MoreHorizontal } from "lucide-react";
 import { useChatStore } from "../store/useChatStore.js";
 import { useAuthStore } from "../store/useAuthStore.js";
 import ChatHeader from "./ChatHeader.jsx";
@@ -11,6 +12,7 @@ function ChatContainer() {
     const messageEndRef=useRef(null);
     const [editingMessageId,setEditingMessageId]=useState(null);
     const [editingText,setEditingText]=useState("");
+    const [mobileActionsForId,setMobileActionsForId]=useState(null);
 
     useEffect(()=>{
         getMessages(selectedUser._id);
@@ -51,7 +53,14 @@ function ChatContainer() {
                                     <img src={msg.senderId==authUser._id? authUser.profilePic || "/avatar.png":selectedUser.profilePic||"/avatar.png"} alt="profile pic" />
                                 </div>
                             </div>
-                            <div className="bg-base-100 chat-bubble relative group">
+                            <div
+                                className="bg-base-100 chat-bubble relative group"
+                                onClick={()=>{
+                                    if(msg.senderId==authUser._id){
+                                        setMobileActionsForId(prev=> prev===msg._id ? null : msg._id)
+                                    }
+                                }}
+                            >
                                 {msg.image && (
                                     <img src={msg.image} alt="senderImg"  className="sm:max-w-[200px] rounded-md mb-2"/>
                                 )}
@@ -84,7 +93,7 @@ function ChatContainer() {
                                 {msg.senderId==authUser._id && (
                                     <div className="absolute -top-2 -right-2 hidden group-hover:flex items-center gap-1">
                                         <button
-                                            onClick={()=>{ setEditingMessageId(msg._id); setEditingText(msg.text || ""); }}
+                                            onClick={()=>{ setEditingMessageId(msg._id); setEditingText(msg.text || ""); setMobileActionsForId(null); }}
                                             className="bg-primary text-white text-xs px-2 py-1 rounded shadow"
                                             title="Edit message"
                                         >
@@ -94,6 +103,31 @@ function ChatContainer() {
                                             onClick={()=>deleteMessage(msg._id)}
                                             className="bg-error text-white text-xs px-2 py-1 rounded shadow"
                                             title="Delete message"
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                )}
+                                {msg.senderId==authUser._id && (
+                                    <button
+                                        className="absolute -top-2 -right-2 lg:hidden bg-base-300 rounded-full p-1 shadow"
+                                        onClick={(e)=>{ e.stopPropagation(); setMobileActionsForId(prev=> prev===msg._id ? null : msg._id); }}
+                                        title="More"
+                                    >
+                                        <MoreHorizontal className="size-4" />
+                                    </button>
+                                )}
+                                {msg.senderId==authUser._id && mobileActionsForId===msg._id && (
+                                    <div className="mt-2 flex gap-2 lg:hidden">
+                                        <button
+                                            onClick={()=>{ setEditingMessageId(msg._id); setEditingText(msg.text || ""); setMobileActionsForId(null); }}
+                                            className="btn btn-xs btn-primary"
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            onClick={()=>{ deleteMessage(msg._id); setMobileActionsForId(null); }}
+                                            className="btn btn-xs btn-error"
                                         >
                                             Delete
                                         </button>
