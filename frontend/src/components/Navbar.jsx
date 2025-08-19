@@ -1,15 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuthStore } from "../store/useAuthStore";
-import { MessageSquareMore, Settings, Users, LogOut, Menu } from "lucide-react";
+import { MessageSquareMore, Settings, Users, LogOut, Menu, Bell, BellOff } from "lucide-react";
 import { Link } from "react-router-dom";
 import {useThemeStore} from "../store/useThemeStore.js"
+import { soundManager } from "../lib/sound.js";
 export default function Navbar() {
     const { logout, authUser } = useAuthStore();
     const [menuOpen, setMenuOpen] = useState(false);
     const {theme}=useThemeStore();
+    const [soundEnabled, setSoundEnabled] = useState(true);
+    
+    useEffect(() => {
+        const settings = soundManager.getSettings();
+        setSoundEnabled(settings.isEnabled);
+    }, []);
+    
+    const toggleSound = () => {
+        const newState = !soundEnabled;
+        setSoundEnabled(newState);
+        soundManager.setEnabled(newState);
+    };
     return (
-        <header data-theme={theme} className="w-full bg-base-100 fixed top-0 flex justify-between items-center gap-2 pr-5 z-10">
-            <Link to="/" className=" flex items-center gap-2">
+        <header data-theme={theme} className="w-full bg-base-100 fixed top-0 flex justify-between items-center gap-2  pr-5 z-10">
+            <Link to="/" className=" flex justify-center items-center gap-2">
                 <div className="h-12 w-12 rounded-md ml-5 mt-2 bg-primary/10 flex justify-center items-center opacity-100 hover:opacity-100">
                     <MessageSquareMore className='size-8' />
                 </div>
@@ -18,6 +31,16 @@ export default function Navbar() {
 
             {/* Desktop links */}
             <div className="hidden sm:flex gap-5">
+                {/* Sound Toggle Button */}
+                <button
+                    onClick={toggleSound}
+                    className="flex items-center gap-2 opacity-50 hover:opacity-100 transition-opacity"
+                    title={soundEnabled ? "Disable sound notifications" : "Enable sound notifications"}
+                >
+                    {soundEnabled ? <Bell className="size-5" /> : <BellOff className="size-5" />}
+                    <span className="text-sm">{soundEnabled ? "Sound On" : "Sound Off"}</span>
+                </button>
+                
                 <Link to="/setting" className="flex items-center gap-2">
                     <Settings className="opacity-50 transition-transform duration-300 hover:scale-125 hover:opacity-100 hover:rotate-90" />
                     <p>Settings</p>
@@ -47,6 +70,15 @@ export default function Navbar() {
                 </button>
                 {menuOpen && (
                     <div className="absolute right-0 mt-2 w-40 bg-base-100  rounded-md shadow-lg flex flex-col z-20">
+                        {/* Sound Toggle in Mobile Menu */}
+                        <button
+                            onClick={toggleSound}
+                            className="flex items-center gap-2 px-4 py-2 hover:bg-[#3a2732] text-left w-full"
+                        >
+                            {soundEnabled ? <Bell className="size-4" /> : <BellOff className="size-4" />}
+                            <span>{soundEnabled ? "Sound On" : "Sound Off"}</span>
+                        </button>
+                        
                         <Link
                             to="/setting"
                             className="flex items-center gap-2 px-4 py-2 "

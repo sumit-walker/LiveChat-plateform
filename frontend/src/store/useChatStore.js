@@ -2,6 +2,7 @@ import {create} from "zustand";
 import toast from "react-hot-toast";
 import { axiosInstance } from "../lib/axios";
 import { useAuthStore } from "./useAuthStore";
+import { soundManager } from "../lib/sound.js";
 
 export const useChatStore=create((set,get)=>({
     messages:[],
@@ -105,13 +106,16 @@ _subscribed: false, // internal guard
         // chat is open → append
         set({ messages: [...messages, newMessage] });
       } else {
-        // chat is not open → increment unseen
+        // chat is not open → increment unseen and play sound
         set({
           unseenMessages: {
             ...unseenMessages,
             [senderId]: (unseenMessages[senderId] || 0) + 1,
           },
         });
+        
+        // Play notification sound for unseen messages
+        soundManager.playNotification();
       }
     });
 

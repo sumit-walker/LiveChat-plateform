@@ -24,6 +24,7 @@ function UserProfileModal({ user, isOnline, onClose }) {
 					<div>
 						<div className="text-lg font-semibold">{user.fullName}</div>
 						<div className="text-sm text-zinc-400">{user.email}</div>
+						{user.bio && <div className="text-sm text-zinc-400">{user.bio}</div>}
 					</div>
 					<div>
 						<span className={`px-2 py-0.5 rounded-full text-xs ${isOnline ? "bg-green-500/20 text-green-400" : "bg-zinc-500/20 text-zinc-300"}`}>

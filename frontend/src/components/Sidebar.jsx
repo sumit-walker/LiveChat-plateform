@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useChatStore } from "../store/useChatStore";
 import { useAuthStore } from "../store/useAuthStore";
 import SidebarSkeleton from "./skeletons/SidebarSkeletons";
-import { Users } from "lucide-react";
+import { Users, Bell } from "lucide-react";
+import { soundManager } from "../lib/sound.js";
 
 function Sidebar() {
   const {
@@ -53,6 +54,14 @@ function Sidebar() {
           <span className="text-xs text-zinc-500 hidden lg:block">
             ({Math.max(onlineUsers.length - 1, 0)} online)
           </span>
+          {/* Sound Status Indicator */}
+          <div className="ml-auto flex items-center gap-1">
+            {soundManager.getSettings().isEnabled ? (
+              <Bell className="size-4 text-green-500" title="Sound notifications enabled" />
+            ) : (
+              <Bell className="size-4 text-zinc-400" title="Sound notifications disabled" />
+            )}
+          </div>
         </div>
 
         <div className="mt-3 hidden lg:flex items-center gap-2">
