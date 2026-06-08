@@ -8,12 +8,12 @@ import { useThemeStore } from "../store/useThemeStore.js"
 function SignupPage() {
     const {theme}=useThemeStore();
     
-    const {signup,isSigningup} = useAuthStore();
+    const {signup,isSigningUp} = useAuthStore();
     const [showPwd,setShowPwd]=useState(false);
     const passwordRef=useRef(null);
 
     const [formData,setFormData] = useState({
-        firstName:"",
+        fullName:"",
         email:"",
         password:""
     })
@@ -89,7 +89,7 @@ function SignupPage() {
                         )}
                     </div>
                     <button type="submit" className="btn bg-[#FF9900] text-black border-[#e17d00] mt-5 w-full rounded-md">
-                        {isSigningup ? (
+                        {isSigningUp ? (
                             <>
                                 <span className="loading loading-spinner loading-sm"></span>Loading...
                             </>

@@ -6,9 +6,20 @@ import express from "express";
 const app=express();
 const server=http.createServer(app);
 
+const isDev = process.env.NODE_ENV !== "production";
+
 const io=new Server(server,{
     cors:{
-        origin:"http://localhost:5173",
+        origin: (origin, callback) => {
+            if (!origin) return callback(null, true);
+            if (isDev && /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
+                return callback(null, true);
+            }
+            if (["http://localhost:5173", "http://127.0.0.1:5173"].includes(origin)) {
+                return callback(null, true);
+            }
+            return callback(new Error("Not allowed by CORS"));
+        },
         credentials:true
     }
 });

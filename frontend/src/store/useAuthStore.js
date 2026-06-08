@@ -3,7 +3,22 @@ import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 import {io} from "socket.io-client";
 
-const BASE_URL=import.meta.env.MODE==="development"?"http://localhost:1000":"/";
+const refreshMembers = () => {
+    import("./useChatStore").then(({ useChatStore }) => {
+        useChatStore.getState().getUsers();
+    });
+};
+
+const getApiErrorMessage = (error, fallback) => {
+    if (error.response?.data?.message) return error.response.data.message;
+    if (!error.response) {
+        return "Cannot connect to server. Run from project root: npm run dev";
+    }
+    if (error.response?.status) {
+        return `${fallback} (error ${error.response.status})`;
+    }
+    return fallback;
+};
 export const useAuthStore = create((set,get)=>({
     authUser:null,
     isSigningUp:false,
@@ -18,7 +33,8 @@ export const useAuthStore = create((set,get)=>({
             const res = await axiosInstance.get("/auth/check")
             set({authUser:res.data});
 
-            get().connectSocket()
+            get().connectSocket();
+            refreshMembers();
         }catch(error){
             console.log("Error in checkAuth:",error);
             set({authUser:null});
@@ -34,8 +50,9 @@ export const useAuthStore = create((set,get)=>({
             toast.success("Account created succcessfully");
             set({authUser:res.data});
             get().connectSocket();
+            refreshMembers();
         }catch(error){
-            toast.error(error.response?.data?.message || "Signup failed");
+            toast.error(getApiErrorMessage(error, "Signup failed"));
             console.log("Error in Signup: ",error);
         }finally{
             set({isSigningUp:false})
@@ -50,8 +67,9 @@ export const useAuthStore = create((set,get)=>({
             toast.success("Account logged in successfully");
 
             get().connectSocket();
+            refreshMembers();
         }catch(error){
-            toast.error(error.response?.data?.message || "Login failed");
+            toast.error(getApiErrorMessage(error, "Login failed"));
             console.log("Error in login: ",error);
         }finally{
             set({isLoggingIn:false})
@@ -102,15 +120,23 @@ export const useAuthStore = create((set,get)=>({
         const {authUser}=get()
         if(!authUser || get().socket?.connected) return ;
 
-        const socket=io(BASE_URL,{
+        const socket=io({
             query:{
                 userId:authUser._id,
             }
         })
+        socket.on("connect", () => {
+            refreshMembers();
+            import("./useChatStore").then(({ useChatStore }) => {
+                useChatStore.getState().subscribeTOMessages();
+            });
+        });
+
         socket.connect();
         set({socket:socket});
         socket.on("getOnlineUsers",(userIds)=>{
             set({onlineUsers:userIds});
+            refreshMembers();
         })
     },
    
