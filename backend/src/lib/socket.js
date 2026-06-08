@@ -1,21 +1,16 @@
 import {Server} from "socket.io";
 import http from "http";
 import express from "express";
+import { isAllowedOrigin } from "./cors.js";
 
 
 const app=express();
 const server=http.createServer(app);
 
-const isDev = process.env.NODE_ENV !== "production";
-
 const io=new Server(server,{
     cors:{
         origin: (origin, callback) => {
-            if (!origin) return callback(null, true);
-            if (isDev && /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
-                return callback(null, true);
-            }
-            if (["http://localhost:5173", "http://127.0.0.1:5173"].includes(origin)) {
+            if (isAllowedOrigin(origin)) {
                 return callback(null, true);
             }
             return callback(new Error("Not allowed by CORS"));

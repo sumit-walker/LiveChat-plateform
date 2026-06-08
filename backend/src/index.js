@@ -8,6 +8,7 @@ import authRoutes from "./routes/auth.route.js"
 import messageRoutes from "./routes/message.route.js"
 import {connectDB} from "./lib/db.js"
 import {app,server} from "./lib/socket.js"
+import { isAllowedOrigin } from "./lib/cors.js"
 
 dotenv.config();// Load environment variables from .env file
 const PORT = process.env.PORT || 1000;
@@ -18,16 +19,6 @@ app.use(cookieParser());
 // Increase body limits to allow base64 image payloads
 app.use(express.json({ limit: "25mb" }));
 app.use(express.urlencoded({ extended: true, limit: "25mb" }));
-
-const isDev = process.env.NODE_ENV !== "production";
-
-const isAllowedOrigin = (origin) => {
-  if (!origin) return true;
-  if (isDev && /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
-    return true;
-  }
-  return ["http://localhost:5173", "http://127.0.0.1:5173"].includes(origin);
-};
 
 app.use(
   cors({

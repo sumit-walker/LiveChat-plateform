@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "sec/index.js",
+  "main": "src/index.js",
   "scripts": {
     "cleanup-users": "node scripts/cleanup-test-users.js",
     "free-port": "kill-port 1000",
