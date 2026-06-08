@@ -10,6 +10,7 @@ import {Loader} from "lucide-react"
 import {useEffect} from "react"
 import { Toaster } from "react-hot-toast";
 import { useThemeStore } from "./store/useThemeStore.js"
+import { unlockNotificationAudio } from "./lib/notificationSound.js"
 const App=()=> {
 
   const {authUser,checkAuth,isCheckingAuth,onlineUsers}= useAuthStore();
@@ -18,6 +19,16 @@ const App=()=> {
   useEffect(()=>{
     checkAuth()
   },[checkAuth])
+
+  useEffect(() => {
+    const enableSound = () => unlockNotificationAudio();
+    window.addEventListener("click", enableSound, { once: true });
+    window.addEventListener("keydown", enableSound, { once: true });
+    return () => {
+      window.removeEventListener("click", enableSound);
+      window.removeEventListener("keydown", enableSound);
+    };
+  }, []);
 
 
   if(isCheckingAuth && !authUser) return (

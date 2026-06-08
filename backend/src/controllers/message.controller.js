@@ -5,9 +5,11 @@ import { getReceiverSocketId,io } from "../lib/socket.js";
 export const getUserForSidebar = async (req,res)=>{
     try{
         const loggedInUserId = req.user._id;
-        const filteredUser = await User.find({_id:{$ne:loggedInUserId}}).select("-password");
+        const members = await User.find({ _id: { $ne: loggedInUserId } })
+            .select("-password")
+            .sort({ fullName: 1 });
 
-        res.status(200).json(filteredUser);
+        res.status(200).json(members);
     }catch(error){
         console.error("Error in getUserForSidebar",error.message);
         res.status(500).json({error:"Internal server error"});

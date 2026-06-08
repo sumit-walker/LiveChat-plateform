@@ -3,6 +3,7 @@ import { useAuthStore } from "../store/useAuthStore";
 import { MessageSquareMore, Settings, Users, LogOut, Menu } from "lucide-react";
 import { Link } from "react-router-dom";
 import {useThemeStore} from "../store/useThemeStore.js"
+import NotificationBell from "./NotificationBell.jsx";
 export default function Navbar() {
     const { logout, authUser } = useAuthStore();
     const [menuOpen, setMenuOpen] = useState(false);
@@ -17,7 +18,8 @@ export default function Navbar() {
             </Link>
 
             {/* Desktop links */}
-            <div className="hidden sm:flex gap-5">
+            <div className="hidden sm:flex items-center gap-5">
+                {authUser && <NotificationBell />}
                 <Link to="/setting" className="flex items-center gap-2">
                     <Settings className="opacity-50 transition-transform duration-300 hover:scale-125 hover:opacity-100 hover:rotate-90" />
                     <p>Settings</p>
@@ -37,7 +39,9 @@ export default function Navbar() {
             </div>
 
             {/* Mobile menu icon */}
-            <div className="sm:hidden relative ">
+            <div className="sm:hidden flex items-center gap-1">
+                {authUser && <NotificationBell />}
+                <div className="relative">
                 <button
                     onClick={() => setMenuOpen((prev) => !prev)}
                     className="p-2 focus:outline-none"
@@ -80,6 +84,7 @@ export default function Navbar() {
                         )}
                     </div>
                 )}
+                </div>
             </div>
         </header>
     );

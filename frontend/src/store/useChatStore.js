@@ -2,11 +2,13 @@ import {create} from "zustand";
 import toast from "react-hot-toast";
 import { axiosInstance } from "../lib/axios";
 import { useAuthStore } from "./useAuthStore";
+import { playNotificationSound } from "../lib/notificationSound";
 
 export const useChatStore=create((set,get)=>({
     messages:[],
     users:[],
     unseenMessages: {},
+    notificationPulse: 0,
     selectedUser:null,
     isUserLoading:false,
     isMessagesLoading:false,
@@ -87,31 +89,46 @@ _subscribed: false, // internal guard
     const socket = useAuthStore.getState().socket;
     if (!socket) return;
 
-    // prevent duplicates
-    if (get()._subscribed) return;
+    socket.off("newMessage");
+    socket.off("messageUpdated");
+    socket.off("messageDeleted");
     set({ _subscribed: true });
 
-    // in case something already attached
-    socket.off("newMessage");
-    socket.off("messageDeleted");
-
     socket.on("newMessage", (newMessage) => {
-      const { selectedUser, messages, unseenMessages } = get();
-      const senderId = newMessage?.senderId || newMessage?.sender?._id;
+      const { selectedUser, messages, unseenMessages, users, notificationPulse } = get();
+      const senderId = String(newMessage?.senderId || newMessage?.sender?._id || "");
 
-      if (!senderId) return; // can't route without sender id
+      if (!senderId) return;
 
-      if (selectedUser?._id && senderId === selectedUser._id) {
-        // chat is open → append
+      const isActiveChat =
+        selectedUser?._id && senderId === String(selectedUser._id);
+
+      if (isActiveChat) {
         set({ messages: [...messages, newMessage] });
+        return;
+      }
+
+      const sender = users.find((user) => String(user._id) === senderId);
+      const preview = newMessage.text?.trim() || "Sent an image";
+
+      set({
+        unseenMessages: {
+          ...unseenMessages,
+          [senderId]: (unseenMessages[senderId] || 0) + 1,
+        },
+        notificationPulse: notificationPulse + 1,
+      });
+
+      playNotificationSound();
+
+      if (sender) {
+        toast(`${sender.fullName}: ${preview}`, { icon: "🔔" });
       } else {
-        // chat is not open → increment unseen
-        set({
-          unseenMessages: {
-            ...unseenMessages,
-            [senderId]: (unseenMessages[senderId] || 0) + 1,
-          },
-        });
+        toast(`New message: ${preview}`, { icon: "🔔" });
+      }
+
+      if (typeof window !== "undefined" && "Notification" in window && Notification.permission === "granted") {
+        new Notification(sender?.fullName || "New message", { body: preview });
       }
     });
 

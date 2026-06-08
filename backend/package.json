@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "main": "sec/index.js",
   "scripts": {
+    "cleanup-users": "node scripts/cleanup-test-users.js",
+    "free-port": "kill-port 1000",
+    "predev": "kill-port 1000",
     "dev": "nodemon src/index.js",
     "start": "node src/index.js"
   },
@@ -24,6 +27,7 @@
     "socket.io": "^4.8.1"
   },
   "devDependencies": {
+    "kill-port": "^2.0.1",
     "nodemon": "^3.1.10"
   }
 }
