@@ -1,6 +1,7 @@
 # Chat App
 
 A modern, real-time chat application built with React, Zustand, Tailwind CSS, and Socket.io.
+https://chat-app-pvdd.onrender.com/
 
 ## Features
 
